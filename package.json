@@ -1,0 +1,14 @@
+{
+  "name": "stores-to-b2cloud",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Satoshi Kojima",
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^2.6.1"
+  }
+}
