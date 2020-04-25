@@ -43,7 +43,9 @@ const handleCsvInput = async (e) => {
   const file = e.target.files[0];
   const csv = await readSjisFile(file);
   const json = createJsonFromCsv(csv);
-  console.log(json);
+  const message = document.querySelector('#message');
+  message.innerHTML = JSON.stringify(json);
+  message.style.display = "block";
 };
 
 
