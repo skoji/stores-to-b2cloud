@@ -15,10 +15,35 @@ const readSjisFile = (file) => {
   });
 }  
 
+const error = (str) => {
+  // TODO: display error on page;
+  console.log(str);
+};
+
+const cleanEntry = (entry) => entry.trim().replace(/^"/, '').replace(/"$/, '');
+
+
+const createJsonFromCsv = (str) => {
+  const table = str.split("\n").filter(line => { return line.trim().length > 0; });
+  const header = table.shift().split(',').map(x => cleanEntry(x));
+  return table.map(l => {
+    const line = l.split(',').map(x => cleanEntry(x));
+    if (line.length != header.length) {
+      error(`not consistent: ${line.length}, ${header.length}, ${line}`);
+      return {};
+    }
+    return header.reduce((acc, current, index) => {
+      acc[current] = line[index];
+      return acc;
+    }, {});
+  });
+}
+
 const handleCsvInput = async (e) => {
   const file = e.target.files[0];
-  const resultStr = await readSjisFile(file);
-  console.log(resultStr);
+  const csv = await readSjisFile(file);
+  const json = createJsonFromCsv(csv);
+  console.log(json);
 };
 
 
