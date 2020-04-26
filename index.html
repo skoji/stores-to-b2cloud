@@ -2,11 +2,17 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- font awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">    
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.5.0.slim.min.js" integrity="sha256-MlusDLJIP1GRgLrOflUQtshyP0TwT/RHXsI1wWGnQhs=" crossorigin="anonymous"></script>    
     <!-- bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- - tempus dominous -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
     <!--  -->
     <script src="./build/index.js"></script>
     <style>
@@ -22,10 +28,28 @@
       </div>
       <div>
         <form>
-          <div class="form-group">
+          <div class="form-group col-sm-6">
             <label for="inputCsv">入力ファイル（STORESのオーダー csv）</label>
             <input type="file" accept="text/csv" class="form-control-file" id="inputCsv">
           </div>
+          <div class="form-group col-sm-6">
+            <label for="sendDate">発送日</label>
+            <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+              <input id="sendDate" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4"/>
+              <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              </div>
+            </div>
+            <script type="text/javascript">
+             $(function () {
+                 $('#datetimepicker4').datetimepicker({
+                     minDate: moment(),
+                     defaultDate: moment(),
+                     locale: 'ja',
+                     format: 'L'
+                 });
+             });
+            </script>
         </form>
         <div class="alert alert-primary" role="alert" id="message">        
         </div>
