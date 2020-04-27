@@ -3,6 +3,7 @@ const encoding = require('encoding-japanese');
 window.onload = () => {
 
   // TODO: 配達時間帯と備考のチェック
+  // TODO: 「ステータス」行をチェックする。未発送のみ対象？
   
   const b2Headers = ["お客様管理番号",
                      "送り状種類", // 0 : 発払い 3 : ＤＭ便 4 : タイム 5 : 着払い 7 : ネコポス 8 : 宅急便コンパクト
@@ -142,14 +143,13 @@ window.onload = () => {
 
   const cleanEntry = (entry) => entry.trim().replace(/^"/, '').replace(/"$/, '');
 
-
   const createJsonFromCsv = (str) => {
     const table = str.split("\n").filter(line => { return line.trim().length > 0; });
     const header = table.shift().split(',').map(x => cleanEntry(x));
     return table.map(l => {
       const line = l.split(',').map(x => cleanEntry(x));
       if (line.length != header.length) {
-        error(`not consistent: ${line.length}, ${header.length}, ${line}`);
+        error(`正いcsvではありません: 項目数 ${line.length}, 必要な項目数 ${header.length}, ${line}`);
         return {};
       }
       return header.reduce((acc, current, index) => {
@@ -157,8 +157,27 @@ window.onload = () => {
         return acc;
       }, {});
     });
-  }
+  };
 
+  const checkAddress = (json) => {
+    if (json['電話番号(配送先)'] === json['電話番号(購入者)'] &&
+        json['郵便番号(配送先)'] === json['郵便番号(購入者)'] &&
+        json['都道府県(配送先)'] === json['都道府県(購入者)'] &&
+        json['住所(配送先)'] === json['住所(購入者)'] &&
+        json['氏(配送先)'] === json['氏(購入者)'] &&
+        json['名(配送先)'] === json['名(購入者)']) {
+      return "same";
+    }
+    return "differ";
+  };
+  
+  const generateB2Cdata = (json) => {
+    const addressCheck = checkAddress(json);
+    const data = {};
+    data["送り状種類"] = 0; // 発払い TODO: 設定可能にするべき
+    data["クール区分"] = ''; // 通常 TODO: 設定可能にするべき    
+  };
+  
   const handleCsvInput = async (e) => {
     const file = e.target.files[0];
     const csv = await readSjisFile(file);
