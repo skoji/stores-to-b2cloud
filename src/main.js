@@ -7,7 +7,7 @@ window.onload = () => {
   
   const b2Headers = ["お客様管理番号",
                      "送り状種類", // 0 : 発払い 3 : ＤＭ便 4 : タイム 5 : 着払い 7 : ネコポス 8 : 宅急便コンパクト
-                     "クール区分", // 0：通常 1:クール冷蔵 2:クール冷凍
+                     "クール区分", // 0：通常 2:クール冷蔵 1:クール冷凍
                      "伝票番号",
                      "出荷予定日",　// 毎回
                      "お届け予定日",
@@ -141,15 +141,12 @@ window.onload = () => {
 
   const parseCsv = (csv) => {
     const strDelimiter = ",";
-
     const objPattern = new RegExp(
       (
         // Delimiters.
         "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-
         // Quoted fields.
         "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-
         // Standard fields.
         "([^\"\\" + strDelimiter + "\\r\\n]*))"
       ),
@@ -158,7 +155,6 @@ window.onload = () => {
 
 
     const arrData = [[]];
-
     let arrMatches = null;
 
     while (arrMatches = objPattern.exec(csv)) {
@@ -235,8 +231,8 @@ window.onload = () => {
     const c = false; // TODO
 
     const data = {};
-    data["送り状種類"] = 0; // 発払い TODO: 設定可能にするべき
-    data["クール区分"] = ''; // 通常 TODO: 設定可能にするべき
+    data["送り状種類"] = document.querySelector('#sendKind').value;
+    data["クール区分"] = document.querySelector('#cool').value;
     data["出荷予定日"] = document.querySelector('#sendDate').value;
     data["配送時間帯"] = ''; // TODO
     data["お届け先電話番号"] = json["電話番号(配送先)"];
@@ -304,7 +300,7 @@ ${json['備考']}`);
 
   messageArea = document.querySelector('#message');
   errorArea = document.querySelector('#error');
-  downloadArea = document.querySelector('#donload');
+  downloadArea = document.querySelector('#download');
   document.querySelector('#inputCsv').addEventListener('change', handleCsvInput);
 
 }
