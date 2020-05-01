@@ -92,7 +92,7 @@ window.onload = () => {
                      "検索キータイトル5",
                      "検索キー5",
                      "予備",
-                     "予備",
+
                      "投函予定メール利用区分",
                      "投函予定メールe-mailアドレス",
                      "投函予定メールメッセージ",
@@ -172,23 +172,39 @@ window.onload = () => {
   };
   
   const generateB2Cdata = (json) => {
-    const addressCheck = checkAddress(json);
+    const c = checkAddress(json) === "same";
     const data = {};
     data["送り状種類"] = 0; // 発払い TODO: 設定可能にするべき
-    data["クール区分"] = ''; // 通常 TODO: 設定可能にするべき    
+    data["クール区分"] = ''; // 通常 TODO: 設定可能にするべき
+    data["出荷予定日"] = document.querySelector('#sendDate').value;
+    data["配送時間帯"] = ''; // TODO
+    data["お届け先電話番号"] = json["電話番号(配送先)"];
+    data["お届け先郵便番号"] = json["郵便番号(配送先)"];
+    data["お届け先住所"] = [json["都道府県(配送先)"], json["住所(配送先)"]].join(' ');
+    data["お届け先名"] = [json["氏(配送先)"],json["名(配送先)"]].join(' ');
+
+    // TODO : デフォルト依頼主、設定可能にすべき
+    data["ご依頼主電話番号"] = c ? '' : json["電話番号(購入者)"];
+    data["ご依頼主郵便番号"] = c ? '' : json["郵便番号(購入者)"];
+    data["ご依頼主住所"] = c ? '' : [json["都道府県(購入者)"], ["住所(購入者)"]].join(' ');
+    data["ご依頼主名"] = [json["氏(購入者)"],json["名(購入者)"]].join(' ');
+
+    data["品名１"] = "菓子";
+    console.log(JSON.stringify(data));
+    return data;
   };
   
   const handleCsvInput = async (e) => {
     const file = e.target.files[0];
     const csv = await readSjisFile(file);
-    const json = createJsonFromCsv(csv);
-    message(JSON.stringify(json));
+    const jsons = createJsonFromCsv(csv);
+    const data = jsons.map(json => generateB2Cdata(json));
+    message(JSON.stringify(data));
   };
 
 
   messageArea = document.querySelector('#message');
   errorArea = document.querySelector('#error');
-  console.log(errorArea);
   document.querySelector('#inputCsv').addEventListener('change', handleCsvInput);
 
 }
