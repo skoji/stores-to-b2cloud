@@ -1,6 +1,6 @@
 {
   "name": "stores-to-b2cloud",
-  "version": "0.0.1",
+  "version": "0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "rollup -c"
   },
   "author": "Satoshi Kojima",
-  "license": "MIT",
+  "license": "AGPL3",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^7.1.3",

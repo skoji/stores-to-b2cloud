@@ -1,7 +1,9 @@
-# Stores to b2Cloud
+# Stores to B2Cloud
 
-STORESのオーダーcsvを、ヤマト運輸の B2Cloud の送り状レイアウトcsvに変換します。データカスタマイズ後、Webサーバへの設置が必要です。
-なお全ての処理はブラウザ側で行われるので、ローカルPCのWebサーバでも問題なく動作します。
+STORESのオーダーcsvを、ヤマト運輸B2Cloudの送り状基本レイアウトcsvに変換します。データカスタマイズ後、Webサーバへの設置が必要です。
+全ての処理はブラウザ側で行われるので、顧客データがWebに流れる心配がありません。また、ローカルPCのWebサーバでも問題なく動作します。
+
+![](stores-to-b2cloud.png)
 
 ## 特徴
 
@@ -16,6 +18,10 @@ STORESの住所情報は、B2クラウドの情報ほど細かく分かれてい
 カタカナが2文字以上続く場所から後を「アパート・マンション名」とみなして分割しますが、カタカナではないアパート名などでは問題が発生します。
 
 B2クラウドで読み込み後に修正してください。
+
+## ビルド
+
+`npm install && npm run build`
 
 ## 設定
 
@@ -38,7 +44,7 @@ B2クラウドで読み込み後に修正してください。
 ```
 
 * `sender`で始まる要素は、デフォルトの依頼人です。
-* `contentsName`は品名にはいります。（STORESの品名は、今は反映させていません）
+* `contentsName`は品名にはいります。（STORESのアイテム名は今は反映させていません）
 * `customerId`は、B2クラウドの顧客コードです。
 * `customerKind`は、B2クラウドの請求先分類コードです。
 * `fareId`は、B2クラウドの運賃管理番号です。
@@ -55,6 +61,13 @@ rsyncを使う場合は、`deploy-template.sh`も参考になるでしょう。
 
 ダウンロードしたcsvを、「送り状発行システムB2クラウド」の「外部データから発行」で、「基本レイアウト(csv)」を選択した上で、アップロードしてください。
 「取り込み開始行」は2行目です。
+
+## ライセンスなど
+
+* [encoding.js](https://github.com/polygonplanet/encoding.js/)を使っています。（encoding.jsの[ライセンスはMIT](https://github.com/polygonplanet/encoding.js/blob/master/LICENSE)です）
+* 単純なコードで、改造は簡単だと思います。必要があればforkして変えていってください。
+* AGPL3.0であることにご留意ください。万が一別のライセンスをご希望の場合は[skoji@skoji.jp](mailto:skoji@skoji.jp)までお問い合わせください。
+
 
 
 
