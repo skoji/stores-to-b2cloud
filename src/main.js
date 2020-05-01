@@ -2,7 +2,6 @@ const encoding = require('encoding-japanese');
 
 window.onload = () => {
 
-  // TODO: 配達時間帯と備考のチェック
   // TODO: 「ステータス」行をチェックする。未発送のみ対象？
   
   const b2Headers = ["お客様管理番号",
@@ -11,7 +10,7 @@ window.onload = () => {
                      "伝票番号",
                      "出荷予定日",　// 毎回
                      "お届け予定日",
-                     "配達時間帯", // TODO
+                     "配達時間帯", 
                      "お届け先コード", 
                      "お届け先電話番号", // 電話番号(配送先)
                      "お届け先電話番号枝番", //
@@ -227,14 +226,12 @@ window.onload = () => {
   };
   
   const generateB2Cdata = (json, index) => {
-    //    const c = checkAddress(json) === "same";
-    const c = false; // TODO
-
+    const c = checkAddress(json) === "same";
     const data = {};
     data["送り状種類"] = document.querySelector('#sendKind').value;
     data["クール区分"] = document.querySelector('#cool').value;
     data["出荷予定日"] = document.querySelector('#sendDate').value;
-    data["配送時間帯"] = ''; // TODO
+    data["配送時間帯"] = '';
     data["お届け先電話番号"] = json["電話番号(配送先)"];
     data["お届け先郵便番号"] = json["郵便番号(配送先)"];
     data["お届け先名"] = [json["氏(配送先)"],json["名(配送先)"]].join(' ');
@@ -243,16 +240,15 @@ window.onload = () => {
       data["お届け先住所"] = a[0];
       data["お届け先アパートマンション名"] = a[1];
     }
-
-    // TODO : デフォルト依頼主、設定可能にすべき
-    data["ご依頼主電話番号"] = c ? '' : json["電話番号(購入者)"];
-    data["ご依頼主郵便番号"] = c ? '' : json["郵便番号(購入者)"];
+    
+    data["ご依頼主電話番号"] = c ? document.querySelector('#senderTel').value : json["電話番号(購入者)"];
+    data["ご依頼主郵便番号"] = c ? document.querySelector('#senderZip').value : json["郵便番号(購入者)"];
     {
       const a = splitAddress([json["都道府県(購入者)"], json["住所(購入者)"]].join(''));
-      data["ご依頼主住所"] = c ? '' : a[0];
-      data["ご依頼主アパートマンション"] = c ? '' : a[1];      
+      data["ご依頼主住所"] = c ? document.querySelector('#senderAddress').value : a[0];
+      data["ご依頼主アパートマンション"] = c ? document.querySelector('#senderAddress2').value : a[1];      
     }
-    data["ご依頼主名"] = c ? '' :[json["氏(購入者)"],json["名(購入者)"]].join(' ');
+    data["ご依頼主名"] = c ? document.querySelector('#senderName').value :[json["氏(購入者)"],json["名(購入者)"]].join(' ');
 
     data["品名１"] = document.querySelector('#contentsName').value;
     data["請求先顧客コード"] = document.querySelector('#customerId').value
