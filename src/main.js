@@ -127,7 +127,7 @@ window.onload = () => {
     
   }
 
-  const error = (str) => {
+  const logError = (str) => {
     console.log(errorArea);    
     log(str, errorArea);
   };
@@ -193,7 +193,7 @@ window.onload = () => {
     const header = table.shift();
     return table.map((line, index) => {
       if (line.length != header.length) {
-        error(`正いcsvではありません: index: ${index} 項目数 ${line.length}, 必要な項目数 ${header.length}, ${line}`);
+        logError(`正いcsvではありません: index: ${index} 項目数 ${line.length}, 必要な項目数 ${header.length}, ${line}`);
         return {};        
       }
 
@@ -284,12 +284,16 @@ ${json['備考']}`);
     document.querySelector('#download').style.display = "block";
   };
 
-  const handleCsvInput = async () => {
+  const clearResult = () => {
     messageArea.innerHTML = '';
     messageArea.style.display = 'none';    
     errorArea.innerHTML = '';
     errorArea.style.display = 'none';
     downloadArea.style.display = 'none';
+  }
+  
+  const handleCsvInput = async () => {
+    clearResult();
     const file = document.querySelector('#inputCsv').files[0];
     const csv = await readSjisFile(file);
     const jsons = createJsonFromCsv(csv);
@@ -298,12 +302,43 @@ ${json['備考']}`);
     createDownloadFor(csvText);
   };
 
+  const fetchDefault = async () => {
+    return new Promise((resolve, reject) => {
+      fetch('/default-data.json').then(response => {
+        return response.json();
+      }).then(json => {
+        resolve(json);
+      }).catch(error => {
+          logError('デフォルト値が読み込めませんでした');
+          logError(error);
+          resolve({});
+      });
+    });
+    
+  }
 
+  const handleDefault = async () => {
+    const defaultValues = await fetchDefault();
+    Object.keys(defaultValues).forEach(key => {
+      console.log(defaultValues[key]);
+      const element = document.querySelector(`#${key}`);
+      if (element)
+        element.value = defaultValues[key];
+    });
+  };
+    
+    
   messageArea = document.querySelector('#message');
   errorArea = document.querySelector('#error');
   downloadArea = document.querySelector('#download');
   const execButton = document.querySelector('#exec');
   execButton.addEventListener('click', handleCsvInput);
-  document.querySelector('#inputCsv').addEventListener('change', () => {execButton.disabled = ''});
-
+  document.querySelector('#inputCsv').addEventListener('change', () => {
+    if (execButton.disabled) {
+      execButton.disabled = '';
+    } else {
+      clearResult();
+    }
+  });
+  handleDefault();
 }

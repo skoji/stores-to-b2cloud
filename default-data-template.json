@@ -1,0 +1,12 @@
+{
+  "senderZip": '1000001',
+  "senderAddress": '東京都千代田区千代田1-1-1',
+  "senderAddress2": '山田荘101',
+  "senderTel": '090-1111-1111',
+  "senderName": '山田たろう',
+  "customerId": '1234567890',
+  "customerKind": '',
+  "fareId": '01',
+  "cool": 0,
+  "sendKind": 0
+}
