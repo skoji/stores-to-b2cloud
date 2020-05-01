@@ -103,7 +103,7 @@ window.onload = () => {
 
   let messageArea;
   let errorArea;
-
+  let downloadArea;
   const readSjisFile = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -200,6 +200,7 @@ window.onload = () => {
         error(`正いcsvではありません: index: ${index} 項目数 ${line.length}, 必要な項目数 ${header.length}, ${line}`);
         return {};        
       }
+
       return header.reduce((acc, current, index) => {
         acc[current] = line[index];
         return acc;
@@ -229,9 +230,10 @@ window.onload = () => {
     }
   };
   
-  const generateB2Cdata = (json) => {
+  const generateB2Cdata = (json, index) => {
     //    const c = checkAddress(json) === "same";
-    const c = false; // TODO 
+    const c = false; // TODO
+
     const data = {};
     data["送り状種類"] = 0; // 発払い TODO: 設定可能にするべき
     data["クール区分"] = ''; // 通常 TODO: 設定可能にするべき
@@ -254,11 +256,15 @@ window.onload = () => {
       data["ご依頼主住所"] = c ? '' : a[0];
       data["ご依頼主アパートマンション"] = c ? '' : a[1];      
     }
-    data["ご依頼主名"] = [json["氏(購入者)"],json["名(購入者)"]].join(' ');
+    data["ご依頼主名"] = c ? '' :[json["氏(購入者)"],json["名(購入者)"]].join(' ');
 
     data["品名１"] = "菓子";
     data["請求先顧客コード"] = ''; // TODO; 設定
     data["運賃管理番号"] = '01'; // TODO; 設定
+    if (json["備考"]) {
+      message(`${index}行目 ${[json["氏(購入者)"],json["名(購入者)"]].join(' ')}さんのメッセージがあります<br />
+${json['備考']}`);
+    }
     return data;
   };
 
@@ -282,10 +288,15 @@ window.onload = () => {
   };
   
   const handleCsvInput = async (e) => {
+    messageArea.innerHTML = '';
+    messageArea.style.display = 'none';    
+    errorArea.innerHTML = '';
+    errorArea.style.display = 'none';
+    downloadArea.style.display = 'none';
     const file = e.target.files[0];
     const csv = await readSjisFile(file);
     const jsons = createJsonFromCsv(csv);
-    const data = jsons.map(json => generateB2Cdata(json));
+    const data = jsons.map((json, index) => generateB2Cdata(json, index));
     const csvText = createCsv(data);
     createDownloadFor(csvText);
   };
@@ -293,6 +304,7 @@ window.onload = () => {
 
   messageArea = document.querySelector('#message');
   errorArea = document.querySelector('#error');
+  downloadArea = document.querySelector('#donload');
   document.querySelector('#inputCsv').addEventListener('change', handleCsvInput);
 
 }
