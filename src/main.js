@@ -139,8 +139,6 @@ window.onload = () => {
     log(str, messageArea);
   };
 
-
-
   const cleanEntry = (entry) => entry.trim().replace(/^"/, '').replace(/"$/, '');
 
   const createJsonFromCsv = (str) => {
@@ -172,7 +170,8 @@ window.onload = () => {
   };
   
   const generateB2Cdata = (json) => {
-    const c = checkAddress(json) === "same";
+    //    const c = checkAddress(json) === "same";
+    const c = false; // TODO 
     const data = {};
     data["送り状種類"] = 0; // 発払い TODO: 設定可能にするべき
     data["クール区分"] = ''; // 通常 TODO: 設定可能にするべき
@@ -190,16 +189,28 @@ window.onload = () => {
     data["ご依頼主名"] = [json["氏(購入者)"],json["名(購入者)"]].join(' ');
 
     data["品名１"] = "菓子";
-    console.log(JSON.stringify(data));
     return data;
   };
+
+  const createCsv = (data) => {
+    const csvText = data.map(entry => 
+                             b2Headers.map(h => {
+                               if (entry[h] == null) {
+                                 return '""';
+                               } else {
+                                 return `"${entry[h]}"`;
+                               }
+                             }).join(',')
+                            ).join("\n");
+    message(csvText);
+  }
   
   const handleCsvInput = async (e) => {
     const file = e.target.files[0];
     const csv = await readSjisFile(file);
     const jsons = createJsonFromCsv(csv);
     const data = jsons.map(json => generateB2Cdata(json));
-    message(JSON.stringify(data));
+    createCsv(data);
   };
 
 
