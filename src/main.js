@@ -283,14 +283,14 @@ ${json['備考']}`);
     document.querySelector('#download-link').href = window.URL.createObjectURL(blob);
     document.querySelector('#download').style.display = "block";
   };
-  
-  const handleCsvInput = async (e) => {
+
+  const handleCsvInput = async () => {
     messageArea.innerHTML = '';
     messageArea.style.display = 'none';    
     errorArea.innerHTML = '';
     errorArea.style.display = 'none';
     downloadArea.style.display = 'none';
-    const file = e.target.files[0];
+    const file = document.querySelector('#inputCsv').files[0];
     const csv = await readSjisFile(file);
     const jsons = createJsonFromCsv(csv);
     const data = jsons.map((json, index) => generateB2Cdata(json, index));
@@ -302,6 +302,8 @@ ${json['備考']}`);
   messageArea = document.querySelector('#message');
   errorArea = document.querySelector('#error');
   downloadArea = document.querySelector('#download');
-  document.querySelector('#inputCsv').addEventListener('change', handleCsvInput);
+  const execButton = document.querySelector('#exec');
+  execButton.addEventListener('click', handleCsvInput);
+  document.querySelector('#inputCsv').addEventListener('change', () => {execButton.disabled = ''});
 
 }
