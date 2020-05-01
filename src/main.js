@@ -38,10 +38,8 @@ window.onload = () => {
                      "荷扱い１",
                      "荷扱い２",
                      "記事",
-                     "ｺﾚｸﾄ代金引換額（税込)",
-                     "000円以下　1円以上",
-                     "000円以下　　1円以上",
-                     "内消費税額等",
+                     "コレクト代金引換額（税込)",
+                     "コレクト内消費税額等",
                      "止置き",
                      "営業所コード",
                      "発行枚数",
@@ -168,6 +166,16 @@ window.onload = () => {
     }
     return "differ";
   };
+
+  const splitAddress = (address) => {
+    const a = address.normalize();
+    const pos = a.search(/[ァ-ン][ァ-ン\-]/);
+    if (pos > 0) {
+      return [a.substring(0, pos), a.substring(pos)];
+    } else {
+      return [a, ''];
+    }
+  };
   
   const generateB2Cdata = (json) => {
     //    const c = checkAddress(json) === "same";
@@ -179,16 +187,26 @@ window.onload = () => {
     data["配送時間帯"] = ''; // TODO
     data["お届け先電話番号"] = json["電話番号(配送先)"];
     data["お届け先郵便番号"] = json["郵便番号(配送先)"];
-    data["お届け先住所"] = [json["都道府県(配送先)"], json["住所(配送先)"]].join(' ');
     data["お届け先名"] = [json["氏(配送先)"],json["名(配送先)"]].join(' ');
+    {
+      const a = splitAddress([json["都道府県(配送先)"], json["住所(配送先)"]].join(''));
+      data["お届け先住所"] = a[0];
+      data["お届け先アパートマンション名"] = a[1];
+    }
 
     // TODO : デフォルト依頼主、設定可能にすべき
     data["ご依頼主電話番号"] = c ? '' : json["電話番号(購入者)"];
     data["ご依頼主郵便番号"] = c ? '' : json["郵便番号(購入者)"];
-    data["ご依頼主住所"] = c ? '' : [json["都道府県(購入者)"], ["住所(購入者)"]].join(' ');
+    {
+      const a = splitAddress([json["都道府県(購入者)"], json["住所(購入者)"]].join(''));
+      data["ご依頼主住所"] = c ? '' : a[0];
+      data["ご依頼主アパートマンション"] = c ? '' : a[1];      
+    }
     data["ご依頼主名"] = [json["氏(購入者)"],json["名(購入者)"]].join(' ');
 
     data["品名１"] = "菓子";
+    data["請求先顧客コード"] = ''; // TODO; 設定
+    data["運賃管理番号"] = '01'; // TODO; 設定
     return data;
   };
 
@@ -202,15 +220,22 @@ window.onload = () => {
                                }
                              }).join(',')
                             ).join("\n");
-    message(csvText);
-  }
+    return [b2Headers.map(h => `"${h}"`).join(","), csvText].join("\n");
+  };
+
+  const createDownloadFor = (text) => {
+    const blob = new Blob([text], { "type" : "text/csv" });
+    document.querySelector('#download-link').href = window.URL.createObjectURL(blob);
+    document.querySelector('#download').style.display = "block";
+  };
   
   const handleCsvInput = async (e) => {
     const file = e.target.files[0];
     const csv = await readSjisFile(file);
     const jsons = createJsonFromCsv(csv);
     const data = jsons.map(json => generateB2Cdata(json));
-    createCsv(data);
+    const csvText = createCsv(data);
+    createDownloadFor(csvText);
   };
 
 
