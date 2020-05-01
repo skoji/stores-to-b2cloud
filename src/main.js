@@ -226,7 +226,7 @@ window.onload = () => {
   };
   
   const generateB2Cdata = (json, index) => {
-    const c = checkAddress(json) === "same";
+  const c = checkAddress(json) === "same";
     const data = {};
     data["送り状種類"] = document.querySelector('#sendKind').value;
     data["クール区分"] = document.querySelector('#cool').value;
@@ -300,7 +300,7 @@ ${json['備考']}`);
 
   const fetchDefault = async () => {
     return new Promise((resolve, reject) => {
-      fetch('/default-data.json').then(response => {
+      fetch('./default-data.json').then(response => {
         return response.json();
       }).then(json => {
         resolve(json);
