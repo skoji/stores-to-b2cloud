@@ -1,17 +1,14 @@
 const encoding = require('encoding-japanese');
 
 window.onload = () => {
-
-  // TODO: 「ステータス」行をチェックする。未発送のみ対象？
-  
   const b2Headers = ["お客様管理番号",
                      "送り状種類", // 0 : 発払い 3 : ＤＭ便 4 : タイム 5 : 着払い 7 : ネコポス 8 : 宅急便コンパクト
                      "クール区分", // 0：通常 2:クール冷蔵 1:クール冷凍
                      "伝票番号",
                      "出荷予定日",　// 毎回
                      "お届け予定日",
-                     "配達時間帯", 
-                     "お届け先コード", 
+                     "配達時間帯",
+                     "お届け先コード",
                      "お届け先電話番号", // 電話番号(配送先)
                      "お届け先電話番号枝番", //
                      "お届け先郵便番号", // 郵便番号(配送先)
@@ -123,11 +120,11 @@ window.onload = () => {
     m.innerHTML = str;
     target.appendChild(m);
     target.style.display = "block";
-    
+
   }
 
   const logError = (str) => {
-    console.log(errorArea);    
+    console.log(errorArea);
     log(str, errorArea);
   };
 
@@ -136,55 +133,46 @@ window.onload = () => {
     log(str, messageArea);
   };
 
-  const cleanEntry = (entry) => entry.trim().replace(/^"/, '').replace(/"$/, '');
-
   const parseCsv = (csv) => {
-    const strDelimiter = ",";
+    const delimiter = ",";
     const objPattern = new RegExp(
       (
-        // Delimiters.
-        "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-        // Quoted fields.
+        // delimiters
+        "(\\" + delimiter + "|\\r?\\n|\\r|^)" +
+          // quoted fields
         "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-        // Standard fields.
-        "([^\"\\" + strDelimiter + "\\r\\n]*))"
+          // fields
+        "([^\"\\" + delimiter + "\\r\\n]*))"
       ),
       "gi"
     );
 
 
-    const arrData = [[]];
-    let arrMatches = null;
+    const parsedCsv = [[]];
+    let matches = null;
 
-    while (arrMatches = objPattern.exec(csv)) {
-      const strMatchedDelimiter = arrMatches[1];
+    while (matches = objPattern.exec(csv)) {
+      const matchedDelimiter = matches[1];
       if (
-        strMatchedDelimiter.length &&
-          strMatchedDelimiter !== strDelimiter
+        matchedDelimiter.length &&
+          matchedDelimiter !== delimiter
       ) {
-
-        arrData.push([]);
-
+        parsedCsv.push([]);
       }
 
-      let strMatchedValue;
-
-      if (arrMatches[2]) {
-
-        strMatchedValue = arrMatches[2].replace(
+      let matchedValue;
+      if (matches[2]) {
+        matchedValue = matches[2].replace(
           new RegExp("\"\"", "g"),
           "\""
         );
-
       } else {
-        strMatchedValue = arrMatches[3];
+        matchedValue = matches[3];
       }
-
-      arrData[arrData.length - 1].push(strMatchedValue);
+      parsedCsv[parsedCsv.length - 1].push(matchedValue);
     }
 
-    // Return the parsed data.
-    return (arrData);
+    return parsedCsv;
   }
 
   const createJsonFromCsv = (str) => {
@@ -193,7 +181,7 @@ window.onload = () => {
     return table.map((line, index) => {
       if (line.length != header.length) {
         logError(`正いcsvではありません: index: ${index} 項目数 ${line.length}, 必要な項目数 ${header.length}, ${line}`);
-        return {};        
+        return {};
       }
 
       return header.reduce((acc, current, index) => {
@@ -202,7 +190,7 @@ window.onload = () => {
       }, {});
     });
   }
-  
+
   const checkAddress = (json) => {
     if (json['電話番号(配送先)'] === json['電話番号(購入者)'] &&
         json['郵便番号(配送先)'] === json['郵便番号(購入者)'] &&
@@ -224,9 +212,9 @@ window.onload = () => {
       return [a, ''];
     }
   };
-  
+
   const generateB2Cdata = (json, index) => {
-  const c = checkAddress(json) === "same";
+    const c = checkAddress(json) === "same";
     const data = {};
     data["送り状種類"] = document.querySelector('#sendKind').value;
     data["クール区分"] = document.querySelector('#cool').value;
@@ -240,13 +228,13 @@ window.onload = () => {
       data["お届け先住所"] = a[0];
       data["お届け先アパートマンション名"] = a[1];
     }
-    
+
     data["ご依頼主電話番号"] = c ? document.querySelector('#senderTel').value : json["電話番号(購入者)"];
     data["ご依頼主郵便番号"] = c ? document.querySelector('#senderZip').value : json["郵便番号(購入者)"];
     {
       const a = splitAddress([json["都道府県(購入者)"], json["住所(購入者)"]].join(''));
       data["ご依頼主住所"] = c ? document.querySelector('#senderAddress').value : a[0];
-      data["ご依頼主アパートマンション"] = c ? document.querySelector('#senderAddress2').value : a[1];      
+      data["ご依頼主アパートマンション"] = c ? document.querySelector('#senderAddress2').value : a[1];
     }
     data["ご依頼主名"] = c ? document.querySelector('#senderName').value :[json["氏(購入者)"],json["名(購入者)"]].join(' ');
 
@@ -262,7 +250,7 @@ ${json['備考']}`);
   };
 
   const createCsv = (data) => {
-    const csvText = data.map(entry => 
+    const csvText = data.map(entry =>
                              b2Headers.map(h => {
                                if (entry[h] == null) {
                                  return '""';
@@ -282,12 +270,12 @@ ${json['備考']}`);
 
   const clearResult = () => {
     messageArea.innerHTML = '';
-    messageArea.style.display = 'none';    
+    messageArea.style.display = 'none';
     errorArea.innerHTML = '';
     errorArea.style.display = 'none';
     downloadArea.style.display = 'none';
   }
-  
+
   const handleCsvInput = async () => {
     clearResult();
     const file = document.querySelector('#inputCsv').files[0];
@@ -299,18 +287,17 @@ ${json['備考']}`);
   };
 
   const fetchDefault = async () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
       fetch('./default-data.json').then(response => {
         return response.json();
       }).then(json => {
         resolve(json);
       }).catch(error => {
-          logError('デフォルト値が読み込めませんでした');
-          logError(error);
-          resolve({});
+        logError('デフォルト値が読み込めませんでした');
+        logError(error);
+        resolve({});
       });
     });
-    
   }
 
   const handleDefault = async () => {
@@ -322,8 +309,8 @@ ${json['備考']}`);
         element.value = defaultValues[key];
     });
   };
-    
-    
+
+
   messageArea = document.querySelector('#message');
   errorArea = document.querySelector('#error');
   downloadArea = document.querySelector('#download');

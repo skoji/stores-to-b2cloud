@@ -1,6 +1,6 @@
 {
   "name": "stores-to-b2cloud",
-  "version": "0.5",
+  "version": "0.5.0",
   "description": "",
   "main": "index.js",
   "scripts": {
