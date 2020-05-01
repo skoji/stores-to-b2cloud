@@ -139,22 +139,74 @@ window.onload = () => {
 
   const cleanEntry = (entry) => entry.trim().replace(/^"/, '').replace(/"$/, '');
 
+  const parseCsv = (csv) => {
+    const strDelimiter = ",";
+
+    const objPattern = new RegExp(
+      (
+        // Delimiters.
+        "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
+
+        // Quoted fields.
+        "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
+
+        // Standard fields.
+        "([^\"\\" + strDelimiter + "\\r\\n]*))"
+      ),
+      "gi"
+    );
+
+
+    const arrData = [[]];
+
+    let arrMatches = null;
+
+    while (arrMatches = objPattern.exec(csv)) {
+      const strMatchedDelimiter = arrMatches[1];
+      if (
+        strMatchedDelimiter.length &&
+          strMatchedDelimiter !== strDelimiter
+      ) {
+
+        arrData.push([]);
+
+      }
+
+      let strMatchedValue;
+
+      if (arrMatches[2]) {
+
+        strMatchedValue = arrMatches[2].replace(
+          new RegExp("\"\"", "g"),
+          "\""
+        );
+
+      } else {
+        strMatchedValue = arrMatches[3];
+      }
+
+      arrData[arrData.length - 1].push(strMatchedValue);
+    }
+
+    // Return the parsed data.
+    return (arrData);
+  }
+
   const createJsonFromCsv = (str) => {
-    const table = str.split("\n").filter(line => { return line.trim().length > 0; });
-    const header = table.shift().split(',').map(x => cleanEntry(x));
-    return table.map(l => {
-      const line = l.split(',').map(x => cleanEntry(x));
+    const table = parseCsv(str.trim());
+    const header = table.shift();
+    return table.map((line, index) => {
       if (line.length != header.length) {
-        error(`正いcsvではありません: 項目数 ${line.length}, 必要な項目数 ${header.length}, ${line}`);
-        return {};
+        error(`正いcsvではありません: index: ${index} 項目数 ${line.length}, 必要な項目数 ${header.length}, ${line}`);
+        return {};        
       }
       return header.reduce((acc, current, index) => {
         acc[current] = line[index];
         return acc;
       }, {});
     });
-  };
-
+  }
+  
   const checkAddress = (json) => {
     if (json['電話番号(配送先)'] === json['電話番号(購入者)'] &&
         json['郵便番号(配送先)'] === json['郵便番号(購入者)'] &&
