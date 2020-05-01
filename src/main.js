@@ -32,7 +32,7 @@ window.onload = () => {
                      "ご依頼主名",// 固定 or 氏(購入者)+名(購入者)
                      "ご依頼主名(ｶﾅ)",
                      "品名コード１",
-                     "品名１",// 固定 （アイテム名をプラス？）
+                     "品名１",// 固定 （アイテム名をプラス？） TODO
                      "品名コード２",
                      "品名２",
                      "荷扱い１",
@@ -254,9 +254,10 @@ window.onload = () => {
     }
     data["ご依頼主名"] = c ? '' :[json["氏(購入者)"],json["名(購入者)"]].join(' ');
 
-    data["品名１"] = "菓子";
-    data["請求先顧客コード"] = ''; // TODO; 設定
-    data["運賃管理番号"] = '01'; // TODO; 設定
+    data["品名１"] = document.querySelector('#contentsName').value;
+    data["請求先顧客コード"] = document.querySelector('#customerId').value
+    data["請求先分類コード"] = document.querySelector('#customerKind').value
+    data["運賃管理番号"] =  document.querySelector('#fareId').value
     if (json["備考"]) {
       message(`${index}行目 ${[json["氏(購入者)"],json["名(購入者)"]].join(' ')}さんのメッセージがあります<br />
 ${json['備考']}`);

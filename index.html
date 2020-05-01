@@ -60,6 +60,25 @@
               </div>
             </div>
           </div>
+          <div class="alert alert-secondary col-sm-10">
+            <a class="btn btn-primary" data-toggle="collapse" href="#b2customer" role="button" ria-expanded="false" aria-controls="b2customer">
+              請求先情報（押すと開きます）
+            </a>
+            <div class="collapse" id="b2customer">
+              <div class="form-group col-sm-5">
+                <label for="customerId">顧客コード</label>
+                <input class="form-control form-control-sm" id="customerId" type="text" />
+              </div>
+              <div class="form-group col-sm-3">          
+                <label for="customerKind">請求先分類コード（空白可）</label>
+                <input class="form-control form-control-sm" id="customerKind" type="text" />
+              </div>
+              <div class="form-group col-sm-3">          
+                <label for="fareId">運賃管理番号</label>
+                <input class="form-control form-control-sm" id="fareId" type="text" value="01"/>
+              </div>
+            </div>
+          </div>
           <div class="form-group col-sm-6">
             <label for="sendKind">送り状種類</label>
             <select class="form-control" id="sendKind">
@@ -78,7 +97,12 @@
               <option value='2'>クール冷蔵</option>
               <option value='1'>クール冷凍</option>
             </select>
-          </div>          
+          </div>
+          <div class="form-group col-sm-6">          
+            <label for="contentsName">品名</label>
+            <input class="form-control form-control-sm" id="contentsName" type="text" value="菓子" />
+          </div>
+          
           <div class="form-group col-sm-6">
             <label for="sendDate">発送日</label>
             <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
