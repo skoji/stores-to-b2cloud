@@ -3,9 +3,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- font awesome -->
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">    
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <!-- jquery -->
-    <script   src="https://code.jquery.com/jquery-3.4.1.slim.min.js"   integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="   crossorigin="anonymous"></script>    
+    <script   src="https://code.jquery.com/jquery-3.4.1.slim.min.js"   integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="   crossorigin="anonymous"></script>
     <!-- bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
@@ -16,7 +16,7 @@
     <!--  -->
     <script src="./build/index.js"></script>
     <style>
-     #message, #error, #download {
+     #message, #warning, #error, #download {
          display: none;
      }
     </style>
@@ -42,19 +42,19 @@
                 <label for="senderZip">郵便番号</label>
                 <input class="form-control form-control-sm" id="senderZip" type="text" />
               </div>
-              <div class="form-group col-sm-8">          
+              <div class="form-group col-sm-8">
                 <label for="senderAddress">住所</label>
                 <input class="form-control form-control-sm" id="senderAddress" type="text" />
               </div>
-              <div class="form-group col-sm-8">          
+              <div class="form-group col-sm-8">
                 <label for="senderAddress2">アパート・マンション</label>
                 <input class="form-control form-control-sm" id="senderAddress2" type="text" />
               </div>
-              <div class="form-group col-sm-8">          
+              <div class="form-group col-sm-8">
                 <label for="senderTel">電話</label>
                 <input class="form-control form-control-sm" id="senderTel" type="text" />
               </div>
-              <div class="form-group col-sm-4">          
+              <div class="form-group col-sm-4">
                 <label for="senderName">名前</label>
                 <input class="form-control form-control-sm" id="senderName" type="text" />
               </div>
@@ -69,11 +69,11 @@
                 <label for="customerId">顧客コード</label>
                 <input class="form-control form-control-sm" id="customerId" type="text" />
               </div>
-              <div class="form-group col-sm-5">          
+              <div class="form-group col-sm-5">
                 <label for="customerKind">請求先分類コード（空白可）</label>
                 <input class="form-control form-control-sm" id="customerKind" type="text" />
               </div>
-              <div class="form-group col-sm-5">          
+              <div class="form-group col-sm-5">
                 <label for="fareId">運賃管理番号</label>
                 <input class="form-control form-control-sm" id="fareId" type="text" value="01"/>
               </div>
@@ -87,9 +87,9 @@
               <option value='4'>タイム</option>
               <option value='5'>着払い</option>
               <option value='7'>ネコポス</option>
-              <option value='8'>宅急便コンパクト</option>                                          
+              <option value='8'>宅急便コンパクト</option>
             </select>
-          </div>          
+          </div>
           <div class="form-group col-sm-6">
             <label for="cool">クール区分</label>
             <select class="form-control" id="cool">
@@ -98,11 +98,11 @@
               <option value='1'>クール冷凍</option>
             </select>
           </div>
-          <div class="form-group col-sm-6">          
+          <div class="form-group col-sm-6">
             <label for="contentsName">品名</label>
             <input class="form-control form-control-sm" id="contentsName" type="text" />
           </div>
-          
+
           <div class="form-group col-sm-6">
             <label for="sendDate">発送日</label>
             <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
@@ -125,11 +125,13 @@
           <button id="exec" type="button" class="btn btn-primary" disabled>変換</button>
         </form>
         <div class="alert alert-success" id="download">
-          <a href="#" download="for-b2-cloud.csv" id="download-link">B2クラウド用csvダウンロード</a>
+          <a href="#" download="for-b2-cloud.csv" id="download-link">変換済み：B2クラウド用csv</a>
         </div>
-        <div class="alert alert-primary col-sm-12" role="alert" id="message">        
+        <div class="alert alert-danger" role="alert" id="error">
         </div>
-        <div class="alert alert-danger" role="alert" id="error">        
+        <div class="alert alert-warning" role="alert" id="warning">
+        </div>
+        <div class="alert alert-primary col-sm-12" role="alert" id="message">
         </div>
       </div>
     </div>

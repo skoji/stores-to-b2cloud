@@ -98,6 +98,7 @@ window.onload = () => {
                      "投函完了メール（ご依頼主宛）メールメッセージ"];
 
   let messageArea;
+  let warningArea;
   let errorArea;
   let downloadArea;
   const readSjisFile = (file) => {
@@ -114,8 +115,6 @@ window.onload = () => {
   }
 
   const log = (str, target) => {
-    console.log(str);
-
     const m = document.createElement('p');
     m.innerHTML = str;
     target.appendChild(m);
@@ -124,14 +123,19 @@ window.onload = () => {
   }
 
   const logError = (str) => {
-    console.log(errorArea);
+    console.error(str);
     log(str, errorArea);
   };
 
   const message = (str) => {
-    console.log(messageArea);
+    console.log(str);
     log(str, messageArea);
   };
+
+  const warning = (str) => {
+    console.warn(str);
+    log(str, warningArea);
+  }
 
   const parseCsv = (csv) => {
     const delimiter = ",";
@@ -150,7 +154,6 @@ window.onload = () => {
 
     const parsedCsv = [[]];
     let matches = null;
-
     while (matches = objPattern.exec(csv)) {
       const matchedDelimiter = matches[1];
       if (
@@ -243,8 +246,16 @@ window.onload = () => {
     data["請求先分類コード"] = document.querySelector('#customerKind').value
     data["運賃管理番号"] =  document.querySelector('#fareId').value
     if (json["備考"]) {
-      message(`${index}行目 ${[json["氏(購入者)"],json["名(購入者)"]].join(' ')}さんのメッセージがあります<br />
+      message(`${index + 1}行目 ${[json["氏(購入者)"],json["名(購入者)"]].join(' ')}さんのメッセージがあります<br />
 ${json['備考']}`);
+    }
+    if (json["ステータス"] !== "未発送") {
+      if (json["ステータス"] == "入金待ち") {
+        warning(`${index + 1}行目 ${[json["氏(購入者)"],json["名(購入者)"]].join(' ')}さんの注文ステータスが未発送ではなく${json["ステータス"]}ですが、変換を実行します。`);
+      } else {
+        logError(`${index + 1}行目 ${[json["氏(購入者)"],json["名(購入者)"]].join(' ')}さんの注文ステータスが未発送ではなく${json["ステータス"]}です。`);
+        return null;
+      }
     }
     return data;
   };
@@ -269,9 +280,11 @@ ${json['備考']}`);
   };
 
   const clearResult = () => {
-    messageArea.innerHTML = '';
+    messageArea.innerHTML = '<h3>情報</h3>';
     messageArea.style.display = 'none';
-    errorArea.innerHTML = '';
+    warningArea.innerHTML = '<h3>警告</h3>';
+    warningArea.style.display = 'none';
+    errorArea.innerHTML = '<h3>エラー</h3>';
     errorArea.style.display = 'none';
     downloadArea.style.display = 'none';
   }
@@ -282,6 +295,10 @@ ${json['備考']}`);
     const csv = await readSjisFile(file);
     const jsons = createJsonFromCsv(csv);
     const data = jsons.map((json, index) => generateB2Cdata(json, index));
+    if (data.includes(null)) {
+      logError('入力csvに問題がありました。処理を中止します。');
+      return;
+    }
     const csvText = createCsv(data);
     createDownloadFor(csvText);
   };
@@ -303,15 +320,17 @@ ${json['備考']}`);
   const handleDefault = async () => {
     const defaultValues = await fetchDefault();
     Object.keys(defaultValues).forEach(key => {
-      console.log(defaultValues[key]);
       const element = document.querySelector(`#${key}`);
       if (element)
         element.value = defaultValues[key];
+      else
+        error(`default-data.json内のキー ${key}は無効です`);
     });
   };
 
 
   messageArea = document.querySelector('#message');
+  warningArea = document.querySelector('#warning');  
   errorArea = document.querySelector('#error');
   downloadArea = document.querySelector('#download');
   const execButton = document.querySelector('#exec');
