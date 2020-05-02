@@ -250,7 +250,12 @@ window.onload = () => {
 ${json['備考']}`);
     }
     if (json["ステータス"] !== "未発送") {
-      warning(`${index + 1}行目 ${[json["氏(購入者)"],json["名(購入者)"]].join(' ')}さんの注文ステータスが未発送ではなく、${json["ステータス"]}です`);
+      if (json["ステータス"] == "入金待ち") {
+        warning(`${index + 1}行目 ${[json["氏(購入者)"],json["名(購入者)"]].join(' ')}さんの注文ステータスが未発送ではなく${json["ステータス"]}ですが、変換を実行します。`);
+      } else {
+        logError(`${index + 1}行目 ${[json["氏(購入者)"],json["名(購入者)"]].join(' ')}さんの注文ステータスが未発送ではなく${json["ステータス"]}です。`);
+        return null;
+      }
     }
     return data;
   };
@@ -290,6 +295,10 @@ ${json['備考']}`);
     const csv = await readSjisFile(file);
     const jsons = createJsonFromCsv(csv);
     const data = jsons.map((json, index) => generateB2Cdata(json, index));
+    if (data.includes(null)) {
+      logError('入力csvに問題がありました。処理を中止します。');
+      return;
+    }
     const csvText = createCsv(data);
     createDownloadFor(csvText);
   };
