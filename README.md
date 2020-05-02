@@ -15,7 +15,13 @@
 
 ## ビルド
 
-`npm install && npm run build`
+[リリース](https://github.com/skoji/stores-to-b2cloud/releases)ページから、ビルド済みのzipをダウンロードできます。
+
+node.jsを用意すれば、手元でビルドすることもできます。
+
+``` sh
+npm install && npm run build
+```
 
 ## 設定
 
