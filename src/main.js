@@ -186,13 +186,13 @@ window.onload = () => {
         logError(`正いcsvではありません: index: ${index} 項目数 ${line.length}, 必要な項目数 ${header.length}, ${line}`);
         return {};
       }
-
       return header.reduce((acc, current, index) => {
         acc[current] = line[index];
         return acc;
       }, {});
     });
   }
+
 
   const checkAddress = (json) => {
     if (json['電話番号(配送先)'] === json['電話番号(購入者)'] &&
@@ -289,12 +289,33 @@ ${json['備考']}`);
     downloadArea.style.display = 'none';
   }
 
+  const generateB2CdataTable = (jsons) => {
+    const orderIdHash = {};
+    const d = jsons.map((json, index) => {
+      const r = generateB2Cdata(json, index);
+      const orderId = json['オーダー番号'];
+      const dup = orderIdHash[orderId];
+      if (dup) {
+        if (JSON.stringify(dup) !== JSON.stringify(r)) {
+          logError(`オーダー番号 ${orderId}の注文が複数ありますが、内容が食い違っています。`);
+          logError(`お届け先${r['お届け先名']}として出力しますが、お届け先${dup['お届け先名']}と同一のオーダー番号です。`);
+          return r;
+        }
+        return null;
+      } else  {
+        orderIdHash[orderId] = r;
+      }
+      return r;
+    });
+    return d.filter(entry => entry !== null);
+  }
+
   const handleCsvInput = async () => {
     clearResult();
     const file = document.querySelector('#inputCsv').files[0];
     const csv = await readSjisFile(file);
     const jsons = createJsonFromCsv(csv);
-    const data = jsons.map((json, index) => generateB2Cdata(json, index));
+    const data = generateB2CdataTable(jsons);
     if (data.includes(null)) {
       logError('入力csvに問題がありました。処理を中止します。');
       return;
@@ -330,7 +351,7 @@ ${json['備考']}`);
 
 
   messageArea = document.querySelector('#message');
-  warningArea = document.querySelector('#warning');  
+  warningArea = document.querySelector('#warning');
   errorArea = document.querySelector('#error');
   downloadArea = document.querySelector('#download');
   const execButton = document.querySelector('#exec');
