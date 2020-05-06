@@ -208,7 +208,9 @@ window.onload = () => {
 
   const splitAddress = (address) => {
     const a = address.normalize();
-    const pos = a.search(/[ァ-ン][ァ-ン\-]/);
+    let pos = a.search(/第[一二三四五六七八九1-9１-９]/);
+    if (pos <= 0)
+      pos = a.search(/[ァ-ヴ][ァ-ヶ\-ー]/);
     if (pos > 0) {
       return [a.substring(0, pos), a.substring(pos)];
     } else {
