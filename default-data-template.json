@@ -11,5 +11,7 @@
   "customerKind" : "",
   "fareId" : "01",
   "cool" : 0,
-  "sendKind" : 0
+  "sendKind" : 0,
+  "useScheduleEmail" : true,
+  "scheduleEmailMessage" : "このたびは、当社をご利用いただきありがとうございました。\n今回ご注文頂きました商品を本日クロネコヤマトで発送いたしました。"
 }

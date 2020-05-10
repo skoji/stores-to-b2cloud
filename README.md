@@ -42,7 +42,9 @@ npm install && npm run build
   "customerKind" : "",
   "fareId" : "01",
   "cool" : 0,
-  "sendKind" : 0
+  "sendKind" : 0,
+  "useScheduleEmail" : true,
+  "scheduleEmailMessage" : "このたびは、当社をご利用いただきありがとうございました。\n今回ご注文頂きました商品を本日クロネコヤマトで発送いたしました。"
 }
 ```
 
@@ -54,6 +56,8 @@ npm install && npm run build
 * `fareId`は、B2クラウドの運賃管理番号です。
 * `cool`はクール便区分です。0：通常 2:クール冷蔵 1:クール冷凍
 * `sendKind`は送り状種類です。0 : 発払い 3 : ＤＭ便 4 : タイム 5 : 着払い 7 : ネコポス 8 : 宅急便コンパクト
+* `useScheduledEmail`: お届け完了eメールを利用するかどうか設定する。trueで利用、falseで利用しない。
+* `scheduledEmailMessage`: お届け完了eメールのメッセージ部分テキスト。
 
 ## 設置
 

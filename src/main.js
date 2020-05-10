@@ -234,6 +234,12 @@ window.onload = () => {
       data["お届け先アパートマンション名"] = a[1];
     }
 
+    if (document.querySelector('#useScheduleEmail').checked) {
+      data["お届け予定ｅメール利用区分"] = 1;
+      data["お届け予定ｅメールe-mailアドレス"] = json["メールアドレス"];
+      data["お届け予定ｅメールメッセージ"] = document.querySelector('#scheduleEmailMessage').value;
+    }
+
     data["ご依頼主電話番号"] = c ? document.querySelector('#senderTel').value : json["電話番号(購入者)"];
     data["ご依頼主郵便番号"] = c ? document.querySelector('#senderZip').value : json["郵便番号(購入者)"];
     {
@@ -242,7 +248,6 @@ window.onload = () => {
       data["ご依頼主アパートマンション"] = c ? document.querySelector('#senderAddress2').value : a[1];
     }
     data["ご依頼主名"] = c ? document.querySelector('#senderName').value :[json["氏(購入者)"],json["名(購入者)"]].join(' ');
-
     data["品名１"] = document.querySelector('#contentsName').value;
 
     data["荷扱い１"] = document.querySelector('#handling1').value;
@@ -348,10 +353,15 @@ ${json['備考']}`);
     const defaultValues = await fetchDefault();
     Object.keys(defaultValues).forEach(key => {
       const element = document.querySelector(`#${key}`);
-      if (element)
-        element.value = defaultValues[key];
-      else
+      if (element) {
+        if (element.type === 'checkbox') {
+          element.checked = (defaultValues[key] === true);
+        } else {
+          element.value = defaultValues[key];
+        }
+      } else {
         error(`default-data.json内のキー ${key}は無効です`);
+      }
     });
   };
 

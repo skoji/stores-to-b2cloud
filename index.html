@@ -80,6 +80,24 @@
               </div>
             </div>
           </div>
+          <div class="alert alert-info col-sm-10">
+            <a class="btn btn-secondary" data-toggle="collapse" href="#b2email" role="button" ria-expanded="false" aria-controls="b2email">
+              お届け予定eメール設定（押すと開きます）
+            </a>
+            <div class="collapse" id="b2email">
+              <div class="form-group col-sm-6">
+                <div class="form-group form-check">
+                  <input type="checkbox" class="form-check-input" id="useScheduleEmail">
+                  <label class="form-check-label" for="useScheduleEmail">お届け予定eメールを利用する</label>
+                </div>                
+              </div>
+              <div class="form-group col-sm-8">
+                <label for="scheduleEmailMessage">メッセージ</label>
+                <textarea class="form-control" id="scheduleEmailMessage" rows="4" >このたびは、当社をご利用いただきありがとうございました。
+今回ご注文頂きました商品を本日クロネコヤマトで発送いたしました。</textarea>
+              </div>
+            </div>
+          </div>
           <div class="form-group col-sm-6">
             <label for="sendKind">送り状種類</label>
             <select class="form-control" id="sendKind">
