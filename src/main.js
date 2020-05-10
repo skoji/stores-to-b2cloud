@@ -244,6 +244,10 @@ window.onload = () => {
     data["ご依頼主名"] = c ? document.querySelector('#senderName').value :[json["氏(購入者)"],json["名(購入者)"]].join(' ');
 
     data["品名１"] = document.querySelector('#contentsName').value;
+
+    data["荷扱い１"] = document.querySelector('#handling1').value;
+    data["荷扱い２"] = document.querySelector('#handling2').value;
+    
     data["請求先顧客コード"] = document.querySelector('#customerId').value
     data["請求先分類コード"] = document.querySelector('#customerKind').value
     data["運賃管理番号"] =  document.querySelector('#fareId').value

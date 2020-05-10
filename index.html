@@ -103,7 +103,22 @@
             <label for="contentsName">品名</label>
             <input class="form-control form-control-sm" id="contentsName" type="text" />
           </div>
-
+          <datalist id="handling-list">
+            <option value="精密機器"></option>
+            <option value="ワレ物注意"></option>
+            <option value="下積厳禁"></option>
+            <option value="天地無用"></option>
+            <option value="ナマモノ"></option>
+            <option value="水濡厳禁"></option>
+          </datalist>
+          <div class="form-group col-sm-6">
+            <label for="handling1">荷扱い1</label>
+            <input list="handling-list" class="form-control custom-select custom-select-sm" id="handling1" type="text" />
+          </div>
+          <div class="form-group col-sm-6">
+            <label for="handling2">荷扱い2</label>
+            <input list="handling-list" class="form-control custom-select custom-select-sm" id="handling2" type="text" />
+          </div>
           <div class="form-group col-sm-6">
             <label for="sendDate">発送日</label>
             <div class="input-group date" id="datetimepicker4" data-target-input="nearest">

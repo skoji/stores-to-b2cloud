@@ -37,6 +37,8 @@ npm install && npm run build
   "senderName" : "山田たろう",
   "customerId" : "1234567890",
   "contentsName" : "計算機",
+  "handling1" : "精密機器",
+  "handling2" : "水濡厳禁",
   "customerKind" : "",
   "fareId" : "01",
   "cool" : 0,
@@ -46,6 +48,7 @@ npm install && npm run build
 
 * `sender`で始まる要素は、デフォルトの依頼人です。
 * `contentsName`は品名にはいります。（STORESのアイテム名は今は反映させていません）
+* `handling1`・`handling2`は、荷扱い１・荷扱い２に入ります。精密機器・ワレ物注意・下積厳禁・天地無用・ナマモノ・水濡厳禁がB2クラウドのUIから指定できる既定値ですが、任意の文字列を受け付けます。
 * `customerId`は、B2クラウドの顧客コードです。
 * `customerKind`は、B2クラウドの請求先分類コードです。
 * `fareId`は、B2クラウドの運賃管理番号です。
